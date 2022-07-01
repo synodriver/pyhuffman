@@ -1,2 +1,3 @@
 recursive-include pyhuffman  *
 recursive-include huffman *
+include README.markdown
