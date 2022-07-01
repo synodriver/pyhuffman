@@ -17,4 +17,4 @@ class Testall(TestCase):
 if __name__ == "__main__":
     import unittest
 
-    unittest.maiN()
+    unittest.main()
