@@ -38,11 +38,14 @@ cpdef inline int encode_file(object in_, object out_) except +:
         out_name_bytes = ensure_bytes(out_)
         in_file = fopen(<char*>in_name_bytes, "rb")
         if in_file == NULL:
-            raise FileNotFoundError
+            raise FileNotFoundError(f"can not open{in_}")
+            return 1
 
         out_file = fopen(<char *> out_name_bytes, "wb")
         if out_file == NULL:
-            raise FileNotFoundError
+            fclose(in_file)
+            raise FileNotFoundError(f"can not open{out_}")
+            return 1
 
     cdef int ret = huffman_encode_file(in_file, out_file)
 
@@ -67,11 +70,14 @@ cpdef inline int decode_file(object in_, object out_) except +:
         out_name_bytes = ensure_bytes(out_)
         in_file = fopen(<char*>in_name_bytes, "rb")
         if in_file == NULL:
-            raise FileNotFoundError
+            raise FileNotFoundError(f"can not open{in_}")
+            return 1
 
         out_file = fopen(<char *> out_name_bytes, "wb")
         if out_file == NULL:
-            raise FileNotFoundError
+            fclose(in_file)
+            raise FileNotFoundError(f"can not open{out_}")
+            return 1
 
     cdef int ret = huffman_decode_file(in_file, out_file)
 
