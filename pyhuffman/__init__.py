@@ -19,4 +19,4 @@ if not _should_use_cffi():
 else:
     from pyhuffman.backends.cffi import *
 
-__version__ = "0.1.0.rc1"
+__version__ = "0.1.0"
