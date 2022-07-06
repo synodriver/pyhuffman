@@ -46,8 +46,9 @@ cpdef inline int encode_file(object in_, object out_) except +:
             fclose(in_file)
             raise FileNotFoundError(f"can not open{out_}")
             return 1
-
-    cdef int ret = huffman_encode_file(in_file, out_file)
+    cdef int ret
+    with nogil:
+        ret = huffman_encode_file(in_file, out_file)
 
     if use_fopen:
         fclose(in_file)
@@ -78,8 +79,9 @@ cpdef inline int decode_file(object in_, object out_) except +:
             fclose(in_file)
             raise FileNotFoundError(f"can not open{out_}")
             return 1
-
-    cdef int ret = huffman_decode_file(in_file, out_file)
+    cdef int ret
+    with nogil:
+        ret = huffman_decode_file(in_file, out_file)
 
     if use_fopen:
         fclose(in_file)
@@ -93,7 +95,9 @@ cpdef inline bytes encode(const uint8_t[::1] data):
         Py_ssize_t input_size = data.shape[0]
         unsigned char * out_buf = NULL
         uint32_t out_len
-    cdef int ret = huffman_encode_memory(<const unsigned char*>&data[0], <uint32_t>input_size,&out_buf, &out_len )
+        int ret
+    with nogil:
+        ret = huffman_encode_memory(<const unsigned char*>&data[0], <uint32_t>input_size, &out_buf, &out_len)
     assert out_buf != NULL
     cdef bytes out = PyBytes_FromStringAndSize(<char *>out_buf, <Py_ssize_t>out_len)
     PyMem_Free(out_buf)
@@ -106,7 +110,9 @@ cpdef inline bytes decode(const uint8_t[::1] data):
         Py_ssize_t input_size = data.shape[0]
         unsigned char * out_buf = NULL
         uint32_t out_len
-    cdef int ret = huffman_decode_memory(<const unsigned char*>&data[0], <uint32_t>input_size,&out_buf, &out_len )
+        int ret
+    with nogil:
+        ret = huffman_decode_memory(<const unsigned char*>&data[0], <uint32_t>input_size, &out_buf, &out_len)
     assert out_buf != NULL
     cdef bytes out = PyBytes_FromStringAndSize(<char *>out_buf, <Py_ssize_t>out_len)
     PyMem_Free(out_buf)

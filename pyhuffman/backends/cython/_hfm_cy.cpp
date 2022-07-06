@@ -957,6 +957,13 @@ static const char *__pyx_f[] = {
   "stringsource",
   "type.pxd",
 };
+/* NoFastGil.proto */
+#define __Pyx_PyGILState_Ensure PyGILState_Ensure
+#define __Pyx_PyGILState_Release PyGILState_Release
+#define __Pyx_FastGIL_Remember()
+#define __Pyx_FastGIL_Forget()
+#define __Pyx_FastGilFuncInit()
+
 /* MemviewSliceStruct.proto */
 struct __pyx_memoryview_obj;
 typedef struct {
@@ -1021,13 +1028,6 @@ typedef volatile __pyx_atomic_int_type __pyx_atomic_int;
 #ifndef __PYX_FORCE_INIT_THREADS
   #define __PYX_FORCE_INIT_THREADS 0
 #endif
-
-/* NoFastGil.proto */
-#define __Pyx_PyGILState_Ensure PyGILState_Ensure
-#define __Pyx_PyGILState_Release PyGILState_Release
-#define __Pyx_FastGIL_Remember()
-#define __Pyx_FastGIL_Forget()
-#define __Pyx_FastGilFuncInit()
 
 /* BufferFormatStructs.proto */
 #define IS_UNSIGNED(type) (((type) -1) > 0)
@@ -2707,7 +2707,7 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_encode_fi
  *             fclose(in_file)
  *             raise FileNotFoundError(f"can not open{out_}")             # <<<<<<<<<<<<<<
  *             return 1
- * 
+ *     cdef int ret
  */
       __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_FileNotFoundError); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 47, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
@@ -2737,15 +2737,50 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_encode_fi
 
   /* "pyhuffman/backends/cython/_hfm_cy.pyx":50
  *             return 1
+ *     cdef int ret
+ *     with nogil:             # <<<<<<<<<<<<<<
+ *         ret = huffman_encode_file(in_file, out_file)
  * 
- *     cdef int ret = huffman_encode_file(in_file, out_file)             # <<<<<<<<<<<<<<
+ */
+  {
+      #ifdef WITH_THREAD
+      PyThreadState *_save;
+      Py_UNBLOCK_THREADS
+      __Pyx_FastGIL_Remember();
+      #endif
+      /*try:*/ {
+
+        /* "pyhuffman/backends/cython/_hfm_cy.pyx":51
+ *     cdef int ret
+ *     with nogil:
+ *         ret = huffman_encode_file(in_file, out_file)             # <<<<<<<<<<<<<<
  * 
  *     if use_fopen:
  */
-  __pyx_v_ret = huffman_encode_file(__pyx_v_in_file, __pyx_v_out_file);
+        __pyx_v_ret = huffman_encode_file(__pyx_v_in_file, __pyx_v_out_file);
+      }
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":52
- *     cdef int ret = huffman_encode_file(in_file, out_file)
+      /* "pyhuffman/backends/cython/_hfm_cy.pyx":50
+ *             return 1
+ *     cdef int ret
+ *     with nogil:             # <<<<<<<<<<<<<<
+ *         ret = huffman_encode_file(in_file, out_file)
+ * 
+ */
+      /*finally:*/ {
+        /*normal exit:*/{
+          #ifdef WITH_THREAD
+          __Pyx_FastGIL_Forget();
+          Py_BLOCK_THREADS
+          #endif
+          goto __pyx_L10;
+        }
+        __pyx_L10:;
+      }
+  }
+
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":53
+ *         ret = huffman_encode_file(in_file, out_file)
  * 
  *     if use_fopen:             # <<<<<<<<<<<<<<
  *         fclose(in_file)
@@ -2754,7 +2789,7 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_encode_fi
   __pyx_t_1 = (__pyx_v_use_fopen != 0);
   if (__pyx_t_1) {
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":53
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":54
  * 
  *     if use_fopen:
  *         fclose(in_file)             # <<<<<<<<<<<<<<
@@ -2763,7 +2798,7 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_encode_fi
  */
     (void)(fclose(__pyx_v_in_file));
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":54
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":55
  *     if use_fopen:
  *         fclose(in_file)
  *         fclose(out_file)             # <<<<<<<<<<<<<<
@@ -2772,8 +2807,8 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_encode_fi
  */
     (void)(fclose(__pyx_v_out_file));
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":52
- *     cdef int ret = huffman_encode_file(in_file, out_file)
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":53
+ *         ret = huffman_encode_file(in_file, out_file)
  * 
  *     if use_fopen:             # <<<<<<<<<<<<<<
  *         fclose(in_file)
@@ -2781,7 +2816,7 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_encode_fi
  */
   }
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":55
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":56
  *         fclose(in_file)
  *         fclose(out_file)
  *     if ret > 0:             # <<<<<<<<<<<<<<
@@ -2791,7 +2826,7 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_encode_fi
   __pyx_t_1 = ((__pyx_v_ret > 0) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":56
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":57
  *         fclose(out_file)
  *     if ret > 0:
  *         raise ValueError             # <<<<<<<<<<<<<<
@@ -2799,9 +2834,9 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_encode_fi
  * 
  */
     __Pyx_Raise(__pyx_builtin_ValueError, 0, 0, 0);
-    __PYX_ERR(0, 56, __pyx_L1_error)
+    __PYX_ERR(0, 57, __pyx_L1_error)
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":55
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":56
  *         fclose(in_file)
  *         fclose(out_file)
  *     if ret > 0:             # <<<<<<<<<<<<<<
@@ -2810,7 +2845,7 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_encode_fi
  */
   }
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":57
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":58
  *     if ret > 0:
  *         raise ValueError
  *     return ret             # <<<<<<<<<<<<<<
@@ -2942,7 +2977,7 @@ static PyObject *__pyx_pf_9pyhuffman_8backends_6cython_7_hfm_cy_encode_file(CYTH
   return __pyx_r;
 }
 
-/* "pyhuffman/backends/cython/_hfm_cy.pyx":59
+/* "pyhuffman/backends/cython/_hfm_cy.pyx":60
  *     return ret
  * 
  * cpdef inline int decode_file(object in_, object out_) except +:             # <<<<<<<<<<<<<<
@@ -2974,7 +3009,7 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("decode_file", 0);
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":61
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":62
  * cpdef inline int decode_file(object in_, object out_) except +:
  *     cdef:
  *         int use_fopen = 0             # <<<<<<<<<<<<<<
@@ -2983,7 +3018,7 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
  */
   __pyx_v_use_fopen = 0;
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":64
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":65
  *         FILE * in_file
  *         FILE * out_file
  *     if PyObject_HasAttrString(in_, "fileno") and PyObject_HasAttrString(out_, "fileno"):             # <<<<<<<<<<<<<<
@@ -3001,19 +3036,19 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":65
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":66
  *         FILE * out_file
  *     if PyObject_HasAttrString(in_, "fileno") and PyObject_HasAttrString(out_, "fileno"):
  *         in_file = fdopen(os.dup(in_.fileno()), "rb")             # <<<<<<<<<<<<<<
  *         out_file = fdopen(os.dup(out_.fileno()), "wb")
  *     else:
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_os); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 65, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_os); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 66, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_dup); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 65, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_dup); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 66, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_in_, __pyx_n_s_fileno); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 65, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_in_, __pyx_n_s_fileno); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 66, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_7 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_6))) {
@@ -3027,7 +3062,7 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
     }
     __pyx_t_4 = (__pyx_t_7) ? __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_7) : __Pyx_PyObject_CallNoArg(__pyx_t_6);
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 65, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 66, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_t_6 = NULL;
@@ -3043,26 +3078,26 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
     __pyx_t_3 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_6, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_4);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 65, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 66, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 65, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 66, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_v_in_file = fdopen(__pyx_t_8, ((char const *)"rb"));
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":66
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":67
  *     if PyObject_HasAttrString(in_, "fileno") and PyObject_HasAttrString(out_, "fileno"):
  *         in_file = fdopen(os.dup(in_.fileno()), "rb")
  *         out_file = fdopen(os.dup(out_.fileno()), "wb")             # <<<<<<<<<<<<<<
  *     else:
  *         use_fopen = 1
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_os); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 66, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_os); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 67, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_dup); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 66, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_dup); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 67, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_out_, __pyx_n_s_fileno); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 66, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_out_, __pyx_n_s_fileno); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 67, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_7 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_6))) {
@@ -3076,7 +3111,7 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
     }
     __pyx_t_5 = (__pyx_t_7) ? __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_7) : __Pyx_PyObject_CallNoArg(__pyx_t_6);
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 66, __pyx_L1_error)
+    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 67, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_t_6 = NULL;
@@ -3092,14 +3127,14 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
     __pyx_t_3 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_6, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 66, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 67, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 66, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 67, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_v_out_file = fdopen(__pyx_t_8, ((char const *)"wb"));
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":64
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":65
  *         FILE * in_file
  *         FILE * out_file
  *     if PyObject_HasAttrString(in_, "fileno") and PyObject_HasAttrString(out_, "fileno"):             # <<<<<<<<<<<<<<
@@ -3109,7 +3144,7 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
     goto __pyx_L3;
   }
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":68
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":69
  *         out_file = fdopen(os.dup(out_.fileno()), "wb")
  *     else:
  *         use_fopen = 1             # <<<<<<<<<<<<<<
@@ -3119,31 +3154,31 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
   /*else*/ {
     __pyx_v_use_fopen = 1;
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":69
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":70
  *     else:
  *         use_fopen = 1
  *         in_name_bytes = ensure_bytes(in_)             # <<<<<<<<<<<<<<
  *         out_name_bytes = ensure_bytes(out_)
  *         in_file = fopen(<char*>in_name_bytes, "rb")
  */
-    __pyx_t_3 = __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_ensure_bytes(__pyx_v_in_); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 69, __pyx_L1_error)
+    __pyx_t_3 = __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_ensure_bytes(__pyx_v_in_); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 70, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_v_in_name_bytes = ((PyObject*)__pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":70
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":71
  *         use_fopen = 1
  *         in_name_bytes = ensure_bytes(in_)
  *         out_name_bytes = ensure_bytes(out_)             # <<<<<<<<<<<<<<
  *         in_file = fopen(<char*>in_name_bytes, "rb")
  *         if in_file == NULL:
  */
-    __pyx_t_3 = __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_ensure_bytes(__pyx_v_out_); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 70, __pyx_L1_error)
+    __pyx_t_3 = __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_ensure_bytes(__pyx_v_out_); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 71, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_v_out_name_bytes = ((PyObject*)__pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":71
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":72
  *         in_name_bytes = ensure_bytes(in_)
  *         out_name_bytes = ensure_bytes(out_)
  *         in_file = fopen(<char*>in_name_bytes, "rb")             # <<<<<<<<<<<<<<
@@ -3152,12 +3187,12 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
  */
     if (unlikely(__pyx_v_in_name_bytes == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-      __PYX_ERR(0, 71, __pyx_L1_error)
+      __PYX_ERR(0, 72, __pyx_L1_error)
     }
-    __pyx_t_9 = __Pyx_PyBytes_AsWritableString(__pyx_v_in_name_bytes); if (unlikely((!__pyx_t_9) && PyErr_Occurred())) __PYX_ERR(0, 71, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyBytes_AsWritableString(__pyx_v_in_name_bytes); if (unlikely((!__pyx_t_9) && PyErr_Occurred())) __PYX_ERR(0, 72, __pyx_L1_error)
     __pyx_v_in_file = fopen(((char *)__pyx_t_9), ((char const *)"rb"));
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":72
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":73
  *         out_name_bytes = ensure_bytes(out_)
  *         in_file = fopen(<char*>in_name_bytes, "rb")
  *         if in_file == NULL:             # <<<<<<<<<<<<<<
@@ -3167,29 +3202,29 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
     __pyx_t_1 = ((__pyx_v_in_file == NULL) != 0);
     if (unlikely(__pyx_t_1)) {
 
-      /* "pyhuffman/backends/cython/_hfm_cy.pyx":73
+      /* "pyhuffman/backends/cython/_hfm_cy.pyx":74
  *         in_file = fopen(<char*>in_name_bytes, "rb")
  *         if in_file == NULL:
  *             raise FileNotFoundError(f"can not open{in_}")             # <<<<<<<<<<<<<<
  *             return 1
  * 
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_FileNotFoundError); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 73, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_FileNotFoundError); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 74, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = __Pyx_PyObject_FormatSimple(__pyx_v_in_, __pyx_empty_unicode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 73, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_FormatSimple(__pyx_v_in_, __pyx_empty_unicode); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 74, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_5 = __Pyx_PyUnicode_Concat(__pyx_kp_u_can_not_open, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 73, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyUnicode_Concat(__pyx_kp_u_can_not_open, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 74, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 73, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 74, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_Raise(__pyx_t_4, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __PYX_ERR(0, 73, __pyx_L1_error)
+      __PYX_ERR(0, 74, __pyx_L1_error)
 
-      /* "pyhuffman/backends/cython/_hfm_cy.pyx":72
+      /* "pyhuffman/backends/cython/_hfm_cy.pyx":73
  *         out_name_bytes = ensure_bytes(out_)
  *         in_file = fopen(<char*>in_name_bytes, "rb")
  *         if in_file == NULL:             # <<<<<<<<<<<<<<
@@ -3198,7 +3233,7 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
  */
     }
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":76
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":77
  *             return 1
  * 
  *         out_file = fopen(<char *> out_name_bytes, "wb")             # <<<<<<<<<<<<<<
@@ -3207,12 +3242,12 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
  */
     if (unlikely(__pyx_v_out_name_bytes == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-      __PYX_ERR(0, 76, __pyx_L1_error)
+      __PYX_ERR(0, 77, __pyx_L1_error)
     }
-    __pyx_t_9 = __Pyx_PyBytes_AsWritableString(__pyx_v_out_name_bytes); if (unlikely((!__pyx_t_9) && PyErr_Occurred())) __PYX_ERR(0, 76, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyBytes_AsWritableString(__pyx_v_out_name_bytes); if (unlikely((!__pyx_t_9) && PyErr_Occurred())) __PYX_ERR(0, 77, __pyx_L1_error)
     __pyx_v_out_file = fopen(((char *)__pyx_t_9), ((char const *)"wb"));
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":77
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":78
  * 
  *         out_file = fopen(<char *> out_name_bytes, "wb")
  *         if out_file == NULL:             # <<<<<<<<<<<<<<
@@ -3222,7 +3257,7 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
     __pyx_t_1 = ((__pyx_v_out_file == NULL) != 0);
     if (unlikely(__pyx_t_1)) {
 
-      /* "pyhuffman/backends/cython/_hfm_cy.pyx":78
+      /* "pyhuffman/backends/cython/_hfm_cy.pyx":79
  *         out_file = fopen(<char *> out_name_bytes, "wb")
  *         if out_file == NULL:
  *             fclose(in_file)             # <<<<<<<<<<<<<<
@@ -3231,29 +3266,29 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
  */
       (void)(fclose(__pyx_v_in_file));
 
-      /* "pyhuffman/backends/cython/_hfm_cy.pyx":79
+      /* "pyhuffman/backends/cython/_hfm_cy.pyx":80
  *         if out_file == NULL:
  *             fclose(in_file)
  *             raise FileNotFoundError(f"can not open{out_}")             # <<<<<<<<<<<<<<
  *             return 1
- * 
+ *     cdef int ret
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_FileNotFoundError); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 79, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_FileNotFoundError); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 80, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_v_out_, __pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 79, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_v_out_, __pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 80, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_3 = __Pyx_PyUnicode_Concat(__pyx_kp_u_can_not_open, __pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 79, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyUnicode_Concat(__pyx_kp_u_can_not_open, __pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 80, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 79, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 80, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_Raise(__pyx_t_5, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __PYX_ERR(0, 79, __pyx_L1_error)
+      __PYX_ERR(0, 80, __pyx_L1_error)
 
-      /* "pyhuffman/backends/cython/_hfm_cy.pyx":77
+      /* "pyhuffman/backends/cython/_hfm_cy.pyx":78
  * 
  *         out_file = fopen(<char *> out_name_bytes, "wb")
  *         if out_file == NULL:             # <<<<<<<<<<<<<<
@@ -3264,17 +3299,52 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
   }
   __pyx_L3:;
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":82
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":83
  *             return 1
+ *     cdef int ret
+ *     with nogil:             # <<<<<<<<<<<<<<
+ *         ret = huffman_decode_file(in_file, out_file)
  * 
- *     cdef int ret = huffman_decode_file(in_file, out_file)             # <<<<<<<<<<<<<<
+ */
+  {
+      #ifdef WITH_THREAD
+      PyThreadState *_save;
+      Py_UNBLOCK_THREADS
+      __Pyx_FastGIL_Remember();
+      #endif
+      /*try:*/ {
+
+        /* "pyhuffman/backends/cython/_hfm_cy.pyx":84
+ *     cdef int ret
+ *     with nogil:
+ *         ret = huffman_decode_file(in_file, out_file)             # <<<<<<<<<<<<<<
  * 
  *     if use_fopen:
  */
-  __pyx_v_ret = huffman_decode_file(__pyx_v_in_file, __pyx_v_out_file);
+        __pyx_v_ret = huffman_decode_file(__pyx_v_in_file, __pyx_v_out_file);
+      }
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":84
- *     cdef int ret = huffman_decode_file(in_file, out_file)
+      /* "pyhuffman/backends/cython/_hfm_cy.pyx":83
+ *             return 1
+ *     cdef int ret
+ *     with nogil:             # <<<<<<<<<<<<<<
+ *         ret = huffman_decode_file(in_file, out_file)
+ * 
+ */
+      /*finally:*/ {
+        /*normal exit:*/{
+          #ifdef WITH_THREAD
+          __Pyx_FastGIL_Forget();
+          Py_BLOCK_THREADS
+          #endif
+          goto __pyx_L10;
+        }
+        __pyx_L10:;
+      }
+  }
+
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":86
+ *         ret = huffman_decode_file(in_file, out_file)
  * 
  *     if use_fopen:             # <<<<<<<<<<<<<<
  *         fclose(in_file)
@@ -3283,7 +3353,7 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
   __pyx_t_1 = (__pyx_v_use_fopen != 0);
   if (__pyx_t_1) {
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":85
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":87
  * 
  *     if use_fopen:
  *         fclose(in_file)             # <<<<<<<<<<<<<<
@@ -3292,7 +3362,7 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
  */
     (void)(fclose(__pyx_v_in_file));
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":86
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":88
  *     if use_fopen:
  *         fclose(in_file)
  *         fclose(out_file)             # <<<<<<<<<<<<<<
@@ -3301,8 +3371,8 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
  */
     (void)(fclose(__pyx_v_out_file));
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":84
- *     cdef int ret = huffman_decode_file(in_file, out_file)
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":86
+ *         ret = huffman_decode_file(in_file, out_file)
  * 
  *     if use_fopen:             # <<<<<<<<<<<<<<
  *         fclose(in_file)
@@ -3310,7 +3380,7 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
  */
   }
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":87
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":89
  *         fclose(in_file)
  *         fclose(out_file)
  *     if ret > 0:             # <<<<<<<<<<<<<<
@@ -3320,7 +3390,7 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
   __pyx_t_1 = ((__pyx_v_ret > 0) != 0);
   if (unlikely(__pyx_t_1)) {
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":88
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":90
  *         fclose(out_file)
  *     if ret > 0:
  *         raise ValueError             # <<<<<<<<<<<<<<
@@ -3328,9 +3398,9 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
  * 
  */
     __Pyx_Raise(__pyx_builtin_ValueError, 0, 0, 0);
-    __PYX_ERR(0, 88, __pyx_L1_error)
+    __PYX_ERR(0, 90, __pyx_L1_error)
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":87
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":89
  *         fclose(in_file)
  *         fclose(out_file)
  *     if ret > 0:             # <<<<<<<<<<<<<<
@@ -3339,7 +3409,7 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
  */
   }
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":89
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":91
  *     if ret > 0:
  *         raise ValueError
  *     return ret             # <<<<<<<<<<<<<<
@@ -3349,7 +3419,7 @@ static CYTHON_INLINE int __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_fi
   __pyx_r = __pyx_v_ret;
   goto __pyx_L0;
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":59
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":60
  *     return ret
  * 
  * cpdef inline int decode_file(object in_, object out_) except +:             # <<<<<<<<<<<<<<
@@ -3408,11 +3478,11 @@ static PyObject *__pyx_pw_9pyhuffman_8backends_6cython_7_hfm_cy_3decode_file(PyO
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_out)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("decode_file", 1, 2, 2, 1); __PYX_ERR(0, 59, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("decode_file", 1, 2, 2, 1); __PYX_ERR(0, 60, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "decode_file") < 0)) __PYX_ERR(0, 59, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "decode_file") < 0)) __PYX_ERR(0, 60, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -3425,7 +3495,7 @@ static PyObject *__pyx_pw_9pyhuffman_8backends_6cython_7_hfm_cy_3decode_file(PyO
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("decode_file", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 59, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("decode_file", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 60, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("pyhuffman.backends.cython._hfm_cy.decode_file", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -3452,9 +3522,9 @@ static PyObject *__pyx_pf_9pyhuffman_8backends_6cython_7_hfm_cy_2decode_file(CYT
     __pyx_t_1 = __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode_file(__pyx_v_in_, __pyx_v_out_, 0);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(0, 59, __pyx_L1_error)
+    __PYX_ERR(0, 60, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 60, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
@@ -3471,7 +3541,7 @@ static PyObject *__pyx_pf_9pyhuffman_8backends_6cython_7_hfm_cy_2decode_file(CYT
   return __pyx_r;
 }
 
-/* "pyhuffman/backends/cython/_hfm_cy.pyx":91
+/* "pyhuffman/backends/cython/_hfm_cy.pyx":93
  *     return ret
  * 
  * cpdef inline bytes encode(const uint8_t[::1] data):             # <<<<<<<<<<<<<<
@@ -3496,7 +3566,7 @@ static CYTHON_INLINE PyObject *__pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_enc
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("encode", 0);
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":93
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":95
  * cpdef inline bytes encode(const uint8_t[::1] data):
  *     cdef:
  *         Py_ssize_t input_size = data.shape[0]             # <<<<<<<<<<<<<<
@@ -3505,28 +3575,63 @@ static CYTHON_INLINE PyObject *__pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_enc
  */
   __pyx_v_input_size = (__pyx_v_data.shape[0]);
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":94
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":96
  *     cdef:
  *         Py_ssize_t input_size = data.shape[0]
  *         unsigned char * out_buf = NULL             # <<<<<<<<<<<<<<
  *         uint32_t out_len
- *     cdef int ret = huffman_encode_memory(<const unsigned char*>&data[0], <uint32_t>input_size,&out_buf, &out_len )
+ *         int ret
  */
   __pyx_v_out_buf = NULL;
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":96
- *         unsigned char * out_buf = NULL
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":99
  *         uint32_t out_len
- *     cdef int ret = huffman_encode_memory(<const unsigned char*>&data[0], <uint32_t>input_size,&out_buf, &out_len )             # <<<<<<<<<<<<<<
+ *         int ret
+ *     with nogil:             # <<<<<<<<<<<<<<
+ *         ret = huffman_encode_memory(<const unsigned char*>&data[0], <uint32_t>input_size, &out_buf, &out_len)
+ *     assert out_buf != NULL
+ */
+  {
+      #ifdef WITH_THREAD
+      PyThreadState *_save;
+      Py_UNBLOCK_THREADS
+      __Pyx_FastGIL_Remember();
+      #endif
+      /*try:*/ {
+
+        /* "pyhuffman/backends/cython/_hfm_cy.pyx":100
+ *         int ret
+ *     with nogil:
+ *         ret = huffman_encode_memory(<const unsigned char*>&data[0], <uint32_t>input_size, &out_buf, &out_len)             # <<<<<<<<<<<<<<
  *     assert out_buf != NULL
  *     cdef bytes out = PyBytes_FromStringAndSize(<char *>out_buf, <Py_ssize_t>out_len)
  */
-  __pyx_t_1 = 0;
-  __pyx_v_ret = huffman_encode_memory(((unsigned char const *)(&(*((uint8_t const  *) ( /* dim=0 */ ((char *) (((uint8_t const  *) __pyx_v_data.data) + __pyx_t_1)) ))))), ((uint32_t)__pyx_v_input_size), (&__pyx_v_out_buf), (&__pyx_v_out_len));
+        __pyx_t_1 = 0;
+        __pyx_v_ret = huffman_encode_memory(((unsigned char const *)(&(*((uint8_t const  *) ( /* dim=0 */ ((char *) (((uint8_t const  *) __pyx_v_data.data) + __pyx_t_1)) ))))), ((uint32_t)__pyx_v_input_size), (&__pyx_v_out_buf), (&__pyx_v_out_len));
+      }
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":97
+      /* "pyhuffman/backends/cython/_hfm_cy.pyx":99
  *         uint32_t out_len
- *     cdef int ret = huffman_encode_memory(<const unsigned char*>&data[0], <uint32_t>input_size,&out_buf, &out_len )
+ *         int ret
+ *     with nogil:             # <<<<<<<<<<<<<<
+ *         ret = huffman_encode_memory(<const unsigned char*>&data[0], <uint32_t>input_size, &out_buf, &out_len)
+ *     assert out_buf != NULL
+ */
+      /*finally:*/ {
+        /*normal exit:*/{
+          #ifdef WITH_THREAD
+          __Pyx_FastGIL_Forget();
+          Py_BLOCK_THREADS
+          #endif
+          goto __pyx_L5;
+        }
+        __pyx_L5:;
+      }
+  }
+
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":101
+ *     with nogil:
+ *         ret = huffman_encode_memory(<const unsigned char*>&data[0], <uint32_t>input_size, &out_buf, &out_len)
  *     assert out_buf != NULL             # <<<<<<<<<<<<<<
  *     cdef bytes out = PyBytes_FromStringAndSize(<char *>out_buf, <Py_ssize_t>out_len)
  *     PyMem_Free(out_buf)
@@ -3535,24 +3640,24 @@ static CYTHON_INLINE PyObject *__pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_enc
   if (unlikely(!Py_OptimizeFlag)) {
     if (unlikely(!((__pyx_v_out_buf != NULL) != 0))) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 97, __pyx_L1_error)
+      __PYX_ERR(0, 101, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":98
- *     cdef int ret = huffman_encode_memory(<const unsigned char*>&data[0], <uint32_t>input_size,&out_buf, &out_len )
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":102
+ *         ret = huffman_encode_memory(<const unsigned char*>&data[0], <uint32_t>input_size, &out_buf, &out_len)
  *     assert out_buf != NULL
  *     cdef bytes out = PyBytes_FromStringAndSize(<char *>out_buf, <Py_ssize_t>out_len)             # <<<<<<<<<<<<<<
  *     PyMem_Free(out_buf)
  *     if ret > 0:
  */
-  __pyx_t_2 = PyBytes_FromStringAndSize(((char *)__pyx_v_out_buf), ((Py_ssize_t)__pyx_v_out_len)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 98, __pyx_L1_error)
+  __pyx_t_2 = PyBytes_FromStringAndSize(((char *)__pyx_v_out_buf), ((Py_ssize_t)__pyx_v_out_len)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 102, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_v_out = ((PyObject*)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":99
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":103
  *     assert out_buf != NULL
  *     cdef bytes out = PyBytes_FromStringAndSize(<char *>out_buf, <Py_ssize_t>out_len)
  *     PyMem_Free(out_buf)             # <<<<<<<<<<<<<<
@@ -3561,7 +3666,7 @@ static CYTHON_INLINE PyObject *__pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_enc
  */
   PyMem_Free(__pyx_v_out_buf);
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":100
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":104
  *     cdef bytes out = PyBytes_FromStringAndSize(<char *>out_buf, <Py_ssize_t>out_len)
  *     PyMem_Free(out_buf)
  *     if ret > 0:             # <<<<<<<<<<<<<<
@@ -3571,7 +3676,7 @@ static CYTHON_INLINE PyObject *__pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_enc
   __pyx_t_3 = ((__pyx_v_ret > 0) != 0);
   if (unlikely(__pyx_t_3)) {
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":101
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":105
  *     PyMem_Free(out_buf)
  *     if ret > 0:
  *         raise ValueError             # <<<<<<<<<<<<<<
@@ -3579,9 +3684,9 @@ static CYTHON_INLINE PyObject *__pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_enc
  * 
  */
     __Pyx_Raise(__pyx_builtin_ValueError, 0, 0, 0);
-    __PYX_ERR(0, 101, __pyx_L1_error)
+    __PYX_ERR(0, 105, __pyx_L1_error)
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":100
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":104
  *     cdef bytes out = PyBytes_FromStringAndSize(<char *>out_buf, <Py_ssize_t>out_len)
  *     PyMem_Free(out_buf)
  *     if ret > 0:             # <<<<<<<<<<<<<<
@@ -3590,7 +3695,7 @@ static CYTHON_INLINE PyObject *__pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_enc
  */
   }
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":102
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":106
  *     if ret > 0:
  *         raise ValueError
  *     return out             # <<<<<<<<<<<<<<
@@ -3602,7 +3707,7 @@ static CYTHON_INLINE PyObject *__pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_enc
   __pyx_r = __pyx_v_out;
   goto __pyx_L0;
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":91
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":93
  *     return ret
  * 
  * cpdef inline bytes encode(const uint8_t[::1] data):             # <<<<<<<<<<<<<<
@@ -3634,7 +3739,7 @@ static PyObject *__pyx_pw_9pyhuffman_8backends_6cython_7_hfm_cy_5encode(PyObject
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("encode (wrapper)", 0);
   assert(__pyx_arg_data); {
-    __pyx_v_data = __Pyx_PyObject_to_MemoryviewSlice_dc_nn_uint8_t__const__(__pyx_arg_data, 0); if (unlikely(!__pyx_v_data.memview)) __PYX_ERR(0, 91, __pyx_L3_error)
+    __pyx_v_data = __Pyx_PyObject_to_MemoryviewSlice_dc_nn_uint8_t__const__(__pyx_arg_data, 0); if (unlikely(!__pyx_v_data.memview)) __PYX_ERR(0, 93, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -3658,8 +3763,8 @@ static PyObject *__pyx_pf_9pyhuffman_8backends_6cython_7_hfm_cy_4encode(CYTHON_U
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("encode", 0);
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_v_data.memview)) { __Pyx_RaiseUnboundLocalError("data"); __PYX_ERR(0, 91, __pyx_L1_error) }
-  __pyx_t_1 = __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_encode(__pyx_v_data, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 91, __pyx_L1_error)
+  if (unlikely(!__pyx_v_data.memview)) { __Pyx_RaiseUnboundLocalError("data"); __PYX_ERR(0, 93, __pyx_L1_error) }
+  __pyx_t_1 = __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_encode(__pyx_v_data, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 93, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -3677,7 +3782,7 @@ static PyObject *__pyx_pf_9pyhuffman_8backends_6cython_7_hfm_cy_4encode(CYTHON_U
   return __pyx_r;
 }
 
-/* "pyhuffman/backends/cython/_hfm_cy.pyx":104
+/* "pyhuffman/backends/cython/_hfm_cy.pyx":108
  *     return out
  * 
  * cpdef inline bytes decode(const uint8_t[::1] data):             # <<<<<<<<<<<<<<
@@ -3702,7 +3807,7 @@ static CYTHON_INLINE PyObject *__pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_dec
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("decode", 0);
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":106
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":110
  * cpdef inline bytes decode(const uint8_t[::1] data):
  *     cdef:
  *         Py_ssize_t input_size = data.shape[0]             # <<<<<<<<<<<<<<
@@ -3711,28 +3816,63 @@ static CYTHON_INLINE PyObject *__pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_dec
  */
   __pyx_v_input_size = (__pyx_v_data.shape[0]);
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":107
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":111
  *     cdef:
  *         Py_ssize_t input_size = data.shape[0]
  *         unsigned char * out_buf = NULL             # <<<<<<<<<<<<<<
  *         uint32_t out_len
- *     cdef int ret = huffman_decode_memory(<const unsigned char*>&data[0], <uint32_t>input_size,&out_buf, &out_len )
+ *         int ret
  */
   __pyx_v_out_buf = NULL;
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":109
- *         unsigned char * out_buf = NULL
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":114
  *         uint32_t out_len
- *     cdef int ret = huffman_decode_memory(<const unsigned char*>&data[0], <uint32_t>input_size,&out_buf, &out_len )             # <<<<<<<<<<<<<<
+ *         int ret
+ *     with nogil:             # <<<<<<<<<<<<<<
+ *         ret = huffman_decode_memory(<const unsigned char*>&data[0], <uint32_t>input_size, &out_buf, &out_len)
+ *     assert out_buf != NULL
+ */
+  {
+      #ifdef WITH_THREAD
+      PyThreadState *_save;
+      Py_UNBLOCK_THREADS
+      __Pyx_FastGIL_Remember();
+      #endif
+      /*try:*/ {
+
+        /* "pyhuffman/backends/cython/_hfm_cy.pyx":115
+ *         int ret
+ *     with nogil:
+ *         ret = huffman_decode_memory(<const unsigned char*>&data[0], <uint32_t>input_size, &out_buf, &out_len)             # <<<<<<<<<<<<<<
  *     assert out_buf != NULL
  *     cdef bytes out = PyBytes_FromStringAndSize(<char *>out_buf, <Py_ssize_t>out_len)
  */
-  __pyx_t_1 = 0;
-  __pyx_v_ret = huffman_decode_memory(((unsigned char const *)(&(*((uint8_t const  *) ( /* dim=0 */ ((char *) (((uint8_t const  *) __pyx_v_data.data) + __pyx_t_1)) ))))), ((uint32_t)__pyx_v_input_size), (&__pyx_v_out_buf), (&__pyx_v_out_len));
+        __pyx_t_1 = 0;
+        __pyx_v_ret = huffman_decode_memory(((unsigned char const *)(&(*((uint8_t const  *) ( /* dim=0 */ ((char *) (((uint8_t const  *) __pyx_v_data.data) + __pyx_t_1)) ))))), ((uint32_t)__pyx_v_input_size), (&__pyx_v_out_buf), (&__pyx_v_out_len));
+      }
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":110
+      /* "pyhuffman/backends/cython/_hfm_cy.pyx":114
  *         uint32_t out_len
- *     cdef int ret = huffman_decode_memory(<const unsigned char*>&data[0], <uint32_t>input_size,&out_buf, &out_len )
+ *         int ret
+ *     with nogil:             # <<<<<<<<<<<<<<
+ *         ret = huffman_decode_memory(<const unsigned char*>&data[0], <uint32_t>input_size, &out_buf, &out_len)
+ *     assert out_buf != NULL
+ */
+      /*finally:*/ {
+        /*normal exit:*/{
+          #ifdef WITH_THREAD
+          __Pyx_FastGIL_Forget();
+          Py_BLOCK_THREADS
+          #endif
+          goto __pyx_L5;
+        }
+        __pyx_L5:;
+      }
+  }
+
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":116
+ *     with nogil:
+ *         ret = huffman_decode_memory(<const unsigned char*>&data[0], <uint32_t>input_size, &out_buf, &out_len)
  *     assert out_buf != NULL             # <<<<<<<<<<<<<<
  *     cdef bytes out = PyBytes_FromStringAndSize(<char *>out_buf, <Py_ssize_t>out_len)
  *     PyMem_Free(out_buf)
@@ -3741,24 +3881,24 @@ static CYTHON_INLINE PyObject *__pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_dec
   if (unlikely(!Py_OptimizeFlag)) {
     if (unlikely(!((__pyx_v_out_buf != NULL) != 0))) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 110, __pyx_L1_error)
+      __PYX_ERR(0, 116, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":111
- *     cdef int ret = huffman_decode_memory(<const unsigned char*>&data[0], <uint32_t>input_size,&out_buf, &out_len )
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":117
+ *         ret = huffman_decode_memory(<const unsigned char*>&data[0], <uint32_t>input_size, &out_buf, &out_len)
  *     assert out_buf != NULL
  *     cdef bytes out = PyBytes_FromStringAndSize(<char *>out_buf, <Py_ssize_t>out_len)             # <<<<<<<<<<<<<<
  *     PyMem_Free(out_buf)
  *     if ret > 0:
  */
-  __pyx_t_2 = PyBytes_FromStringAndSize(((char *)__pyx_v_out_buf), ((Py_ssize_t)__pyx_v_out_len)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 111, __pyx_L1_error)
+  __pyx_t_2 = PyBytes_FromStringAndSize(((char *)__pyx_v_out_buf), ((Py_ssize_t)__pyx_v_out_len)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 117, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_v_out = ((PyObject*)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":112
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":118
  *     assert out_buf != NULL
  *     cdef bytes out = PyBytes_FromStringAndSize(<char *>out_buf, <Py_ssize_t>out_len)
  *     PyMem_Free(out_buf)             # <<<<<<<<<<<<<<
@@ -3767,7 +3907,7 @@ static CYTHON_INLINE PyObject *__pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_dec
  */
   PyMem_Free(__pyx_v_out_buf);
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":113
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":119
  *     cdef bytes out = PyBytes_FromStringAndSize(<char *>out_buf, <Py_ssize_t>out_len)
  *     PyMem_Free(out_buf)
  *     if ret > 0:             # <<<<<<<<<<<<<<
@@ -3777,16 +3917,16 @@ static CYTHON_INLINE PyObject *__pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_dec
   __pyx_t_3 = ((__pyx_v_ret > 0) != 0);
   if (unlikely(__pyx_t_3)) {
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":114
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":120
  *     PyMem_Free(out_buf)
  *     if ret > 0:
  *         raise ValueError             # <<<<<<<<<<<<<<
  *     return out
  */
     __Pyx_Raise(__pyx_builtin_ValueError, 0, 0, 0);
-    __PYX_ERR(0, 114, __pyx_L1_error)
+    __PYX_ERR(0, 120, __pyx_L1_error)
 
-    /* "pyhuffman/backends/cython/_hfm_cy.pyx":113
+    /* "pyhuffman/backends/cython/_hfm_cy.pyx":119
  *     cdef bytes out = PyBytes_FromStringAndSize(<char *>out_buf, <Py_ssize_t>out_len)
  *     PyMem_Free(out_buf)
  *     if ret > 0:             # <<<<<<<<<<<<<<
@@ -3795,7 +3935,7 @@ static CYTHON_INLINE PyObject *__pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_dec
  */
   }
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":115
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":121
  *     if ret > 0:
  *         raise ValueError
  *     return out             # <<<<<<<<<<<<<<
@@ -3805,7 +3945,7 @@ static CYTHON_INLINE PyObject *__pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_dec
   __pyx_r = __pyx_v_out;
   goto __pyx_L0;
 
-  /* "pyhuffman/backends/cython/_hfm_cy.pyx":104
+  /* "pyhuffman/backends/cython/_hfm_cy.pyx":108
  *     return out
  * 
  * cpdef inline bytes decode(const uint8_t[::1] data):             # <<<<<<<<<<<<<<
@@ -3837,7 +3977,7 @@ static PyObject *__pyx_pw_9pyhuffman_8backends_6cython_7_hfm_cy_7decode(PyObject
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("decode (wrapper)", 0);
   assert(__pyx_arg_data); {
-    __pyx_v_data = __Pyx_PyObject_to_MemoryviewSlice_dc_nn_uint8_t__const__(__pyx_arg_data, 0); if (unlikely(!__pyx_v_data.memview)) __PYX_ERR(0, 104, __pyx_L3_error)
+    __pyx_v_data = __Pyx_PyObject_to_MemoryviewSlice_dc_nn_uint8_t__const__(__pyx_arg_data, 0); if (unlikely(!__pyx_v_data.memview)) __PYX_ERR(0, 108, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -3861,8 +4001,8 @@ static PyObject *__pyx_pf_9pyhuffman_8backends_6cython_7_hfm_cy_6decode(CYTHON_U
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("decode", 0);
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_v_data.memview)) { __Pyx_RaiseUnboundLocalError("data"); __PYX_ERR(0, 104, __pyx_L1_error) }
-  __pyx_t_1 = __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode(__pyx_v_data, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 104, __pyx_L1_error)
+  if (unlikely(!__pyx_v_data.memview)) { __Pyx_RaiseUnboundLocalError("data"); __PYX_ERR(0, 108, __pyx_L1_error) }
+  __pyx_t_1 = __pyx_f_9pyhuffman_8backends_6cython_7_hfm_cy_decode(__pyx_v_data, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 108, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -17777,7 +17917,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 56, __pyx_L1_error)
+  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 57, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 148, __pyx_L1_error)
   __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(1, 151, __pyx_L1_error)
   __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(1, 180, __pyx_L1_error)
