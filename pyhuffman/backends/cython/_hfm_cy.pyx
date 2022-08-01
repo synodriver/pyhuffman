@@ -39,13 +39,11 @@ cpdef inline int encode_file(object in_, object out_) except +:
         in_file = fopen(<char*>in_name_bytes, "rb")
         if in_file == NULL:
             raise FileNotFoundError(f"can not open{in_}")
-            return 1
 
         out_file = fopen(<char *> out_name_bytes, "wb")
         if out_file == NULL:
             fclose(in_file)
             raise FileNotFoundError(f"can not open{out_}")
-            return 1
     cdef int ret
     with nogil:
         ret = huffman_encode_file(in_file, out_file)
@@ -72,13 +70,11 @@ cpdef inline int decode_file(object in_, object out_) except +:
         in_file = fopen(<char*>in_name_bytes, "rb")
         if in_file == NULL:
             raise FileNotFoundError(f"can not open{in_}")
-            return 1
 
         out_file = fopen(<char *> out_name_bytes, "wb")
         if out_file == NULL:
             fclose(in_file)
             raise FileNotFoundError(f"can not open{out_}")
-            return 1
     cdef int ret
     with nogil:
         ret = huffman_decode_file(in_file, out_file)
