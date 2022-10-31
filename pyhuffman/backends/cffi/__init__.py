@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 from typing import IO, Union
 
-from pyhuffman.backends.cffi._hfm_cffi import ffi, lib
+from pyhuffman.backends.cffi._hfm import ffi, lib
 
 InputType = Union[str, bytes, Path, IO]
 

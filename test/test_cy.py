@@ -4,7 +4,7 @@ Copyright (c) 2008-2021 synodriver <synodriver@gmail.com>
 from random import randint
 from unittest import TestCase
 import sys
-sys.path.append("../")
+sys.path.append(".")
 from pyhuffman import decode, encode
 
 

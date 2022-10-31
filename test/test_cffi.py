@@ -5,7 +5,7 @@ import os
 from random import randint
 from unittest import TestCase
 import sys
-sys.path.append("../")
+sys.path.append(".")
 os.environ["HFM_USE_CFFI"] = "1"
 
 from pyhuffman import decode, encode

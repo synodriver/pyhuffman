@@ -35,7 +35,7 @@ source = """
 """
 
 ffibuilder.set_source(
-    "pyhuffman.backends.cffi._hfm_cffi",
+    "pyhuffman.backends.cffi._hfm",
     source,
     sources=[f"./huffman/huffman.c"],
     include_dirs=["./huffman"],

@@ -43,8 +43,8 @@ class build_ext_compiler_check(build_ext):
 
 extensions = [
     Extension(
-        "pyhuffman.backends.cython._hfm_cy",
-        ["pyhuffman/backends/cython/_hfm_cy.pyx", f"./huffman/huffman.c"],
+        "pyhuffman.backends.cython._hfm",
+        ["pyhuffman/backends/cython/_hfm.pyx", f"./huffman/huffman.c"],
         include_dirs=[f"./huffman"],
         define_macros=[("PYTHON", None)],
     ),
